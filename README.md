@@ -31,7 +31,7 @@ install Node.js and npm if you haven't
 2. Connect your quest with your computer using your Oculus Quest cable.
 3. Go to chrome://inspect#devices on your computer
 4. Go to your VR headset and accept *Allow USB Debugging* when prompted on the headset
-5. On the chrome://inspect#devices on your computer, you should be able to see your device under the *Remote Target* and its active programs. You can then inspect the *2023 VR Class* window on your computer.
+5. On the chrome://inspect#devices on your computer, you should be able to see your device under the *Remote Target* and its active programs. You can then inspect the *NYU-FRL-XR* window on your computer.
 
 # How to create your own demo
 
