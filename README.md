@@ -1,6 +1,6 @@
-# FutureClassroom
+# NYU-FRL-XR
 
-Software for 2023 VR class
+Software for NYU Future Reality Lab webXR-based XR experience.
 
 # How to setup environment
 
@@ -35,7 +35,7 @@ install Node.js and npm if you haven't
 
 # How to create your own demo
 
-1. Go to the [scenes folder](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/) and create a .js file based on the template of [demoExample.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/demoExample.js)
+1. Go to the [scenes folder](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/) and create a .js file based on the template of [demoExample.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/demoSimplest.js)
 2. Change the name and the content of the demo to whatever you like!
 3. Go to [scenes.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js), add the name of your demo and its path to the returned value of [```scenes```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js#L11)
 4. Note that the [```enableSceneReloading```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js#L10) is set to true so that you can hot-reload the changes in your demo. 
@@ -54,9 +54,3 @@ install Node.js and npm if you haven't
 # Notes on customizing your avatar
 1. To change the initial position of your avatar: go to [js/util/inline-viewer-helper.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/inline-viewer-helper.js) and change the values of [```this.lookYaw```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/inline-viewer-helper.js#L46), [```this.walkPosition```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/inline-viewer-helper.js#L47), [```this.lookPitch```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/inline-viewer-helper.js#L49). Notice that [```this.viewerHeight```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/inline-viewer-helper.js#L50) (the avatar's height) is set to be 1.6m from the [```inlineViewerHelper.setHeight(1.6)```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/immersive-pre.js#L503) in [js/immersive-pre.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/immersive-pre.js). You can change this if you like.
 2. To customize your own avatar: go to [js/primitive/avatar.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/primitive/avatar.js). You can change the GLTF models used in the [```Headset```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/primitive/avatar.js#L101) and the [```Controller```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/primitive/avatar.js#L114) classes. You can add additional arguments to the [```initAvatar```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/primitive/avatar.js#L8) function to specify the avatar's look, and pass those values from the [```addPawn```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/util/croquetlib.js#L162) function.
-
-# Notes on WebXR Croquet
-1. Currently, we are only synchronizing the user's actions rather than the scene rendering, so all participants should start at the same time – we do not yet support updating the scene for participants who join later.
-2. In our current implementation, the Croquet session will start when the user clicks on the demoCroquet button, but the session will be dropped only when the person closes the webpage, or after the webpage has not been active for a long time. 
-If you find that synchronization of participants has failed, try refreshing the page for all participants. This usually fixes it.
-3. We are currently disabling the auto-reloading feature, because that feature might create unwanted multiple Croquet sessions.
