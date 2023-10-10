@@ -35,7 +35,7 @@ install Node.js and npm if you haven't
 
 # How to create your own demo
 
-1. Go to the [scenes folder](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/) and create a .js file based on the template of [demoExample.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/demoSimplest.js)
+1. Go to the [scenes folder](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/) and create a .js file based on the template of [demoSimplest.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/demoSimplest.js)
 2. Change the name and the content of the demo to whatever you like!
 3. Go to [scenes.js](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js), add the name of your demo and its path to the returned value of [```scenes```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js#L11)
 4. Note that the [```enableSceneReloading```](https://github.com/futurerealitylab/VR-Class-2023/tree/master/js/scenes/scenes.js#L10) is set to true so that you can hot-reload the changes in your demo. 
