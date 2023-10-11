@@ -32,7 +32,7 @@ export function HandsWidget(widgets) {
     }
 
     this.update = () => {
-        let th = [.01,.0085,.0085,.0085,.007];
+        let th = [.012,.01,.01,.01,.008];
         if(window.handtracking) {
             hands.identity();
             for (let finger = 0 ; finger < 5 ; finger++) {
@@ -87,15 +87,13 @@ export function HandsWidget(widgets) {
 	    this.matrix.left  = jointMatrix.left [0].mat;
 	    this.matrix.right = jointMatrix.right[0].mat;
 
-let L_p = this.matrix.left .slice(12,15);
-let R_p = this.matrix.right.slice(12,15);
-L_joints.identity().move(L_p).scale(1.1).move(cg.scale(L_p,-1));
-L_links .identity().move(L_p).scale(1.1).move(cg.scale(L_p,-1));
-R_joints.identity().move(R_p).scale(1.1).move(cg.scale(R_p,-1));
-R_links .identity().move(R_p).scale(1.1).move(cg.scale(R_p,-1));
+            let L_p = this.matrix.left .slice(12,15);
+            let R_p = this.matrix.right.slice(12,15);
 
-            //L_joints.child(0).setMatrix(this.matrix.left ).move( .005,0,-.045).scale(.03,.015,.03);
-            //R_joints.child(0).setMatrix(this.matrix.right).move(-.005,0,-.045).scale(.03,.015,.03);
+            L_joints.identity().move(L_p).move(cg.scale(L_p,-1));
+            L_links .identity().move(L_p).move(cg.scale(L_p,-1));
+            R_joints.identity().move(R_p).move(cg.scale(R_p,-1));
+            R_links .identity().move(R_p).move(cg.scale(R_p,-1));
 
             L_joints.child(0).setMatrix(this.matrix.left ).move( .005,0,-.045).scale(.0001,.0001,.0001);
             R_joints.child(0).setMatrix(this.matrix.right).move(-.005,0,-.045).scale(.0001,.0001,.0001);
