@@ -2,11 +2,15 @@ import { InputEvents } from "../render/core/InputEvents.js";
 import * as cg from "../render/core/cg.js";
 import { g2 } from "../util/g2.js";
 
+// window.puzzle IS THE GLOBAL OBJECT THAT WILL BE SHARED BETWEEN ALL CLIENTS
+
 window.puzzle = [
    1,1,1, 1,2,1, 1,2,1,
    2,1,2, 2,0,2, 1,1,1,
    1,1,1, 1,2,1, 1,2,1,
 ];
+
+// CHECK TO SEE WHETHER THE GAME HAS BEEN SOLVED
 
 let isSolved = () => {
    let solution = [
@@ -20,12 +24,16 @@ let isSolved = () => {
    return true;
 }
 
+// FIND THE INDEX WHERE THE 0 (EMPTY SLOT) IS
+
 let find0 = () => {
    for (let n = 0 ; n < 27 ; n++)
       if (puzzle[n] == 0)
          return n;
    return 0;
 }
+
+// CREATE A NEW RANDOM PUZZLE
 
 let createNewPuzzle = () => {
    for (let k = 0 ; k < 100 ; k++)
@@ -34,29 +42,43 @@ let createNewPuzzle = () => {
    swap(find0(), 13);
 }
 
+// SWAP THE CONTENTS OF TWO INDICES OF THE PUZZLE
+
 let swap = (a,b) => {
    let tmp = puzzle[a];
    puzzle[a] = puzzle[b];
    puzzle[b] = tmp;
 }
 
+// CONVERT INDEX TO I,J,K COORDINATES
+
 let i = n => n % 3 - 1;
 let j = n => (n/3>>0) % 3 - 1;
 let k = n => (n/9>>0) - 1;
 
+// MAINTAIN STATE FOR EACH HAND: WHICH INDEX IS IT CURRENTLY LOCATED AT?
+// -1 MEANS NO INDEX.
+
 let nh = {left: -1, right: -1};
+
+// PRECOMPUTE THE XYZ COORDINATES OF EACH BOX OF THE 27 BOXES OF THE PUZZLE
 
 let B = [];
 for (let n = 0 ; n < 27 ; n++)
    B.push([.1 * i(n), .1 * j(n) + 1, .1 * k(n)]);
 
+// INITIALIZ THE MODEL
+
 export const init = async model => {
+
+   // PLACE A SPHERE IN EVERY BOX
 
    for (let n = 0 ; n < 27 ; n++)
       model.add('sphere');
 
+   // CREATE THE HELP MENU CARD
+
    let helpMenu = model.add();
-   let doneMenu = model.add();
 
    helpMenu.add('cube').move(0,1.3,0).scale(.25,.25,.0001).texture(() => {
       g2.setColor('#ffffff');
@@ -74,6 +96,10 @@ empty space next to it.
 `, .5, .625, 'center');
    });
 
+   // CREATE THE "CONGRATS YOU ARE DONE" MENU CARD
+
+   let doneMenu = model.add();
+
    doneMenu.add('cube').move(0,1.3,0).scale(.25,.25,.0001).texture(() => {
       g2.setColor('#ffffff');
       g2.fillRect(.2,.3,.6,.4);
@@ -84,12 +110,16 @@ empty space next to it.
 
 YOU SOLVED IT!
 
-Click on any ball
-to start a new game.
+Click anywhere to
+start a new game.
 `, .5, .625, 'center');
    });
 
+   // INSTANTIATE THE INPUT EVENTS HANDLER FOR THIS MODEL
+
    let inputEvents = new InputEvents(model);
+
+   // FIND AT WHICH BOX A PARTICULAR HAND ('left' OR 'right') IS POSITIONED
 
    let findBox = hand => {
       for (let n = 0 ; n < 27 ; n++) {
@@ -100,12 +130,20 @@ to start a new game.
       return -1;
    }
 
+   // ON TRIGGER-RELEASE OR UNPINCH, DO SOMETHING
+
    inputEvents.onRelease = hand => {
+
+      // IF THE PUZZLE WAS ALREADY SOLVED, CREATE A NEW PUZZLE
+
       if (isSolved()) {
          createNewPuzzle();
          server.broadcastGlobal('puzzle');
          return;
       }
+
+      // OTHERWISE, IF THE HAND IS AT A BOX ADJACENT TO THE
+      // EMPTY BOX, THEN SWAP THE CONTENTS OF THE TWO BOXES
 
       let N = find0();
       let n = findBox(hand);
@@ -113,23 +151,36 @@ to start a new game.
          let a = i(n)-i(N), b = j(n)-j(N), c = k(n)-k(N);
          if (a*a + b*b + c*c == 1) {
             swap(n, N);
-            server.broadcastGlobalSlice('puzzle', n, n+1);
-            server.broadcastGlobalSlice('puzzle', N, N+1);
+            server.broadcastGlobal('puzzle');
          }
       }
    }
 
-   inputEvents.onDrag = hand => nh[hand] = findBox(hand);
-   inputEvents.onMove = hand => nh[hand] = findBox(hand);
+   inputEvents.onDrag = hand => nh[hand] = findBox(hand); // KEEP TRACK OF WHICH BOX EACH HAND
+   inputEvents.onMove = hand => nh[hand] = findBox(hand); // IS IN AS IT MOVES OR DRAGS AROUND
+
+   // WHAT TO DO AT EACH ANIMATION FRAME
 
    model.animate(() => {
+
+      // SYNCRHONIZE WITH ALL THE OTHER CLIENTS
+
       puzzle = server.synchronize('puzzle');
+
+      // HANDLE ALL INPUT EVENTS
+
       inputEvents.update();
+
+      // DISPLAY ONE OF THE TWO MENU CARDS
+
       helpMenu.identity().scale(isSolved() ? 0 : 1);
       doneMenu.identity().scale(isSolved() ? 1 : 0);
+
+      // RENDER THE SPHERES
+
       for (let n = 0 ; n < 27 ; n++)
          model.child(n).identity().move(B[n]).scale(puzzle[n]==0 ? 0 : .03)
-	                                     .color(nh.left==n || nh.right==n ? puzzle[n]==2 ? [1,0,0] : [0,.5,1]
+	                                     .color(nh.left==n || nh.right==n ? puzzle[n]==2 ? [1,.5,.5] : [.5,.75,1]
 	                                                                      : puzzle[n]==2 ? [.5,0,0] : [0,.25,.5]);
    });
 }
