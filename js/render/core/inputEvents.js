@@ -63,18 +63,20 @@ export function InputEvents(model) {
          if (Math.abs(L[1] - R[1]) < .01) {
             let X = cg.subtract(R, L);
             X = cg.normalize([X[0], 0, X[2]]);
-            let Y = [0,1,0];
-            let Z = cg.cross(X, Y);
+            let Z = cg.cross(X, [0,1,0]);
             let T = cg.mix(L, R, .5);
-            let M = [X[0],X[1],X[2],0, Y[0],Y[1],Y[2],0, Z[0],Z[1],Z[2],0, T[0],0,T[2],1];
-	    model.setMatrix(M);
-	    IM = cg.mInverse(M);
+	    InputEventsMatrix = [X[0],X[1],X[2],0, 0,1,0,0, Z[0],Z[1],Z[2],0, T[0],0,T[2],1];
+	    model.setMatrix(InputEventsMatrix);
+	    IM = cg.mInverse(InputEventsMatrix);
          }
       }
    }
 
    let pos = {};
-   let IM = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
+   model.setMatrix(InputEventsMatrix);
+   let IM = cg.mInverse(InputEventsMatrix);
    this.pos = hand => cg.mTransform(IM, pos[hand]);
 }
+
+window.InputEventsMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 

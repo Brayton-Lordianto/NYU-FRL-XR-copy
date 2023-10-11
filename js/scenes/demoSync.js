@@ -21,7 +21,7 @@ export const init = async model => {
       sync = server.synchronize('sync');
       inputEvents.update();
       for (let hand in sync)
-         boxes[hand].color(sync[hand] ? 'red' : 'white');
+         boxes[hand].color(sync[hand] ? hand=='left' ? 'red' : 'blue' : 'white');
    });
 }
 

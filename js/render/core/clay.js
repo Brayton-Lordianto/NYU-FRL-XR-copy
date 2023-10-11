@@ -928,10 +928,10 @@ let createSquareMesh = (i, z) => {
    let N = []; N[i] = z < 0 ? -1 : 1; N[j] = 0; N[k] = 0;
 
    let V = [];
-   V.push(vertexArray(A, N, [1,0,0], [0,0]));
-   V.push(vertexArray(B, N, [1,0,0], [0,1]));
-   V.push(vertexArray(C, N, [1,0,0], [1,0]));
-   V.push(vertexArray(D, N, [1,0,0], [1,1]));
+   V.push(vertexArray( A, N, [1,0,0], [z>0?0:0, z>0?0:1] ));
+   V.push(vertexArray( B, N, [1,0,0], [z>0?0:1, z>0?1:1] ));
+   V.push(vertexArray( C, N, [1,0,0], [z>0?1:0, z>0?0:0] ));
+   V.push(vertexArray( D, N, [1,0,0], [z>0?1:1, z>0?1:0] ));
 
    return new Float32Array(V.flat());
 }
