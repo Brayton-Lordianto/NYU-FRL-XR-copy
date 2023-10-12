@@ -197,8 +197,8 @@ export const init = async model => {
          uniform int uWireTexture;
          --------------------------
          if (uWireTexture == 1) {
-            float t = .5 + noise(400. * vAPos + 5. * vec3(0.,0.,uTime));
-            float u = 1. - vNor.x * vNor.x - vNor.y * vNor.y;
+            float t = .5 + noise(400. * vAPos + 5. * vec3(0.,0.,mod(uTime, 100.)));
+            float u = dot(eye, normal);
             t = t * t * (3. - t - t);
             opacity = 30. * pow(t, 9.) * u * u;
             color.g *= .02 * opacity;
