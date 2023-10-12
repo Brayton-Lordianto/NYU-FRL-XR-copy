@@ -12,6 +12,18 @@ export function InputEvents(model) {
    let pinchUp  = { left: 100, right: 100 };
    let handInfo = { left: {pressTime:-1}, right: {pressTime:-1} };
 
+   let syncToWorld = () => {
+      let L = pos.left;
+      let R = pos.right;
+      let X = cg.subtract(R, L);
+      X = cg.normalize([X[0], 0, X[2]]);
+      let Z = cg.cross(X, [0,1,0]);
+      let T = cg.mix(L, R, .5);
+      InputEventsMatrix = [X[0],X[1],X[2],0, 0,1,0,0, Z[0],Z[1],Z[2],0, T[0],0,T[2],1];
+      model.setMatrix(InputEventsMatrix);
+      IM = cg.mInverse(InputEventsMatrix);
+   }
+
    this.update = () => {
       let press = hand => {
          handInfo[hand].pressTime = model.time;
@@ -21,14 +33,17 @@ export function InputEvents(model) {
       let release = hand => {
          this.onRelease(hand, model.time - handInfo[hand].pressTime);
          if (model.time - handInfo[hand].pressTime < 0.5)
-            this.onClick(hand);
+	    if (handInfo[ hand=='left' ? 'right' : 'left' ].pressTime > 0.5)
+	       syncToWorld();
+            else
+	       this.onClick(hand);
          handInfo[hand].pressTime = -1;
       }
 
       pos = {};
       if (window.handtracking) {
          for (let hand in handInfo) {
-	    pos[hand] = clay.handsWidget.getMatrix(hand,1,4).slice(12,15);
+            pos[hand] = clay.handsWidget.getMatrix(hand,1,4).slice(12,15);
             let isPinch = clay.handsWidget.pinch[hand] == 1;
             if (isPinch && pinchUp[hand] > 1) press(hand);
             if (pinchUp[hand] == 0 && ! isPinch) release(hand);
@@ -57,19 +72,8 @@ export function InputEvents(model) {
 
       let LT = handInfo.left.pressTime;
       let RT = handInfo.right.pressTime;
-      if (LT > 0 && RT > 0 && model.time > LT + 3 && model.time > RT + 3) {
-         let L = pos.left;
-         let R = pos.right;
-         if (Math.abs(L[1] - R[1]) < .01) {
-            let X = cg.subtract(R, L);
-            X = cg.normalize([X[0], 0, X[2]]);
-            let Z = cg.cross(X, [0,1,0]);
-            let T = cg.mix(L, R, .5);
-	    InputEventsMatrix = [X[0],X[1],X[2],0, 0,1,0,0, Z[0],Z[1],Z[2],0, T[0],0,T[2],1];
-	    model.setMatrix(InputEventsMatrix);
-	    IM = cg.mInverse(InputEventsMatrix);
-         }
-      }
+      if (LT > 0 && RT > 0 && model.time > LT + 3 && model.time > RT + 3)
+         syncToWorld();
    }
 
    let pos = {};
