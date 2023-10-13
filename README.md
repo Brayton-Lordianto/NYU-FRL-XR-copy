@@ -16,7 +16,7 @@ Replace the ``os.tmpDir()`` in that file by ``'/tmp'``
 
 # How to run on your local computer
 
-1. At root folder, do ``node server/main.js &``
+1. At root folder, do ``./startserver``
 2. Go to chrome://flags/ in your Google Chrome browser
 3. Search: ***"Insecure origins treated as secure"*** and enable the flag
 4. Add http://[your-computer's-ip-address]:8000 to the text box. For example: http://10.19.127.1:8000
