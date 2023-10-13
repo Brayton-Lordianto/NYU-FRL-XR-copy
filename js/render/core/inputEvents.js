@@ -1,5 +1,6 @@
 import * as cg from "./cg.js";
 import { controllerEventTypes, controllerMatrix } from "./controllerInput.js";
+import * as global from "../../global.js";
 
 export function InputEvents(model) {
    this.onClick   = hand => { console.log('onClick', hand); }
@@ -21,6 +22,7 @@ export function InputEvents(model) {
       let T = cg.mix(L, R, .5);
       InputEventsMatrix = [X[0],X[1],X[2],0, 0,1,0,0, Z[0],Z[1],Z[2],0, T[0],0,T[2],1];
       model.setMatrix(InputEventsMatrix);
+      global.gltfRoot.matrix = InputEventsMatrix;
       IM = cg.mInverse(InputEventsMatrix);
    }
 
@@ -78,6 +80,7 @@ export function InputEvents(model) {
 
    let pos = {};
    model.setMatrix(InputEventsMatrix);
+   global.gltfRoot.matrix = InputEventsMatrix;
    let IM = cg.mInverse(InputEventsMatrix);
    this.pos = hand => cg.mTransform(IM, pos[hand]);
 }
