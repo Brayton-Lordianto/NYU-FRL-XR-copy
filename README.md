@@ -4,17 +4,23 @@ Software for NYU Future Reality Lab webXR-based XR experience.
 
 # How to setup environment
 
-install Node.js and npm if you haven't
-
-`npm install`
+install Node.js and npm if you haven't. Then in the command line, do
+```sh
+npm install
+cd server
+npm install
+```
+Then in the server folder, open file: 
+node_modules/formidable/lib/incoming_form.js
+Replace the ``os.tmpDir()`` in that file by ``'/tmp'``
 
 # How to run on your local computer
 
-1. Install python3 if you haven't, then do `python run.py`
+1. At root folder, do ``./startserver``
 2. Go to chrome://flags/ in your Google Chrome browser
 3. Search: ***"Insecure origins treated as secure"*** and enable the flag
-4. Add http://[your-computer's-ip-address]:8080 to the text box. For example: http://10.19.127.1:8080
-5. Relunch the chrome browser on your computer and go to http://localhost:8080 
+4. Add http://[your-computer's-ip-address]:8000 to the text box. For example: http://10.19.127.1:8000
+5. Relunch the chrome browser on your computer and go to http://localhost:8000 
 
 # How to run in VR
 
@@ -22,8 +28,8 @@ install Node.js and npm if you haven't
 2. Open the browser on your VR headset
 3. Go to chrome://flags/
 4. Search: ***"Insecure origins treated as secure"*** and enable the flag
-5. Add http://[your-computer's-ip-address]:8080 to the text box. For example: http://10.19.127.1:8080
-7. Relunch the browser on your VR headset and go to http://[your-computer's-ip-address]:8080 
+5. Add http://[your-computer's-ip-address]:8000 to the text box. For example: http://10.19.127.1:8000
+7. Relunch the browser on your VR headset and go to http://[your-computer's-ip-address]:8000 
 
 # How to debug in VR
 
