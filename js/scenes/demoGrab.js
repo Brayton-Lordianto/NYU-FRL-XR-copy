@@ -24,7 +24,7 @@ for (let i = 0 ; i < 4 ; i++) {
    let theta = 2 * Math.PI * i / 4;
    let c = 4 * radius * Math.cos(theta);
    let s = 4 * radius * Math.sin(theta);
-   balls.push(new Ball([ s, 1.5 + c, .7 ]));
+   balls.push(new Ball([ s, 1.5 + c, 0 ]));
 }
 
 // THEN WE FILL THE ARRAY WITH UNUSED SLOTS, INTO WHICH MORE BALLS CAN BE ADDED.
